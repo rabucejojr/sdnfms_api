@@ -28,20 +28,14 @@ class FileController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        
-        // $request = req::instance();
-        // // $req = request();
-        // }
-
-        // $file = $request->user()->files()->create($request->validated());
-        // return FileResource::make($file);
-
+        $task = File::create($request->validated());
+        return FileResource::make($task);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(File $file)
+    public function show(File $file,)
     {
         //
         return FileResource::make($file);
