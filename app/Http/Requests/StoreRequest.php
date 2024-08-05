@@ -22,8 +22,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
-            'size' => 'required|file|max:10240', // 10MB limit
+            'file' => 'required|file|mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx|max:10240', // 10MB limit
         ];
     }
 }
