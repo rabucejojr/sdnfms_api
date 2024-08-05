@@ -28,8 +28,8 @@ class FileController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $task = File::create($request->validated());
-        return FileResource::make($task);
+        $file = File::create($request->validated());
+        return FileResource::make($file);
     }
 
     /**

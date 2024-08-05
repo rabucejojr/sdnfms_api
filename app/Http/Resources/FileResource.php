@@ -19,8 +19,8 @@ class FileResource extends JsonResource
             'name' => $this->name,
             'path' => $this->path,
             'size' => $this->size,
-            'created_at' => $this->created_at->toDateTimeString(),
-            'updated_at' => $this->updated_at->toDateTimeString(),
+            // 'created_at' => $this->created_at->toDateTimeString(),
+            // 'updated_at' => $this->updated_at->toDateTimeString(),
         ];
     }
 }
