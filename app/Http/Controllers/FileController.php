@@ -36,14 +36,19 @@ class FileController extends Controller
             $original_name = $file->getClientOriginalName();
             $filePath = $request->file('file')->storeAs('files', $original_name);
             $unique_name = $original_name . '.' . $file_ext;
+            $size = $file->getSize();
 
-            $file = File::create([
-                'name' => $original_name, // Retain the original filename
-                'path' => $filePath, // Store the path to access the file
-                'size' => $file->getSize(), // File size
-                'file' => $unique_name,
-            ]);
-            return FileResource::make($file);
+            if ($size <= 10240) {
+                $file = File::create([
+                    'name' => $original_name, // Retain the original filename
+                    'path' => $filePath, // Store the path to access the file
+                    'size' => $size, // File size
+                    'file' => $unique_name,
+                ]);
+                return FileResource::make($file);
+            } else {
+                return response()->json(['error' => 'File exceeds the maximum allowed size of 10MB'], 400);
+            }
         }
     }
 
