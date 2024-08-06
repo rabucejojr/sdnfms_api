@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
-class UpdateRequest extends StoreRequest
+use Illuminate\Foundation\Http\FormRequest;
+
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,10 +22,8 @@ class UpdateRequest extends StoreRequest
     public function rules(): array
     {
         return [
-            //
-            'name' => 'required|string',
-            'path' => 'required|string', 
-            'file' => 'required|file|max:10240', // Max size is 10 MB (10240 KB)
+            'name' => 'nullable|string',
+            'file' => 'sometimes|mimes:jpg,jpeg,png,pdf,xlsx|max:10485760',
         ];
     }
 }
