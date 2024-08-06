@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\FileValidationRequest;
 use App\Http\Requests\StoreRequest;
 use App\Http\Requests\UpdateRequest;
 use App\Http\Resources\FileResource;
@@ -10,19 +9,17 @@ use App\Models\File;
 
 class FileController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Display a listing of the resource.
     public function index()
     {
-        //
-        return FileResource::collection(File::all());
+        $file = File::all();
+        if ($file->isEmpty()) {
+            return response()->json(['message' => 'No files found.'], 404);
+        }
+        return FileResource::collection($file);
     }
 
-    
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Store a newly created resource in storage.
     public function store(StoreRequest $request)
     {
         $request->validateResolved();
@@ -35,7 +32,9 @@ class FileController extends Controller
             $unique_name = $original_name . '.' . $file_ext;
             $size = $file->getSize();
 
+            // Check if filesize is greater than 10mb (10240 bytes)
             if ($size <= 10240) {
+
                 $file = File::create([
                     'name' => $original_name, // Retain the original filename
                     'path' => $filePath, // Store the path to access the file
@@ -49,19 +48,13 @@ class FileController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
+    // Display the specified resource.
     public function show(File $file,)
     {
-        //
         return FileResource::make($file);
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     */
+    // Update the specified resource in storage.
     public function update(UpdateRequest $request, File $file)
     {
         //
@@ -69,12 +62,9 @@ class FileController extends Controller
         return FileResource::make($file);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    // Remove the specified resource from storage.
     public function destroy(File $file)
     {
-        //
         $file->delete();
         return response()->noContent();
     }

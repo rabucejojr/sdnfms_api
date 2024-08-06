@@ -21,7 +21,6 @@ class FileResource extends JsonResource
             'name' => $this->name,
             'path' => asset('storage/' . $this->path),
             'size' => $this->size,
-            // 'file' => $this->file,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];
