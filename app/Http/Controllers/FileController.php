@@ -19,10 +19,7 @@ class FileController extends Controller
         return FileResource::collection(File::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-
+    
     /**
      * Store a newly created resource in storage.
      */
