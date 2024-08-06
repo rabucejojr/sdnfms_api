@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\File>
@@ -16,10 +18,14 @@ class FileFactory extends Factory
      */
     public function definition(): array
     {
+        $fileName = $this->faker->word . '.' . $this->faker->fileExtension;
+        $filePath = 'files/' . $fileName;
+        Storage::disk('public')->put($filePath, Str::random(1000));
         return [
-            'name' => $this->faker->word . '.' . $this->faker->fileExtension,
-            'path' => $this->faker->filePath,
-            'size' => $this->faker->numberBetween(1000, 5000), // Size in bytes
+            'name' => $fileName,
+            'path' => $filePath,
+            'size' => Storage::disk('public')->size($filePath), // Size in bytes
+            'file' => $filePath
         ];
     }
 }

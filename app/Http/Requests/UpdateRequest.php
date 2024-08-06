@@ -21,8 +21,9 @@ class UpdateRequest extends StoreRequest
     {
         return [
             //
-            'name' => 'required|string|max:255',
-            // 'file' => 'required|file|max:10240', // 10MB limit
+            'name' => 'required|string',
+            'path' => 'required|string', 
+            'file' => 'required|file|max:10240', // Max size is 10 MB (10240 KB)
         ];
     }
 }

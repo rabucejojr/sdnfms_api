@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Requests\StoreRequest;
+use App\Models\File;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,10 +19,11 @@ class FileResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'path' => $this->path,
+            'path' => asset('storage/' . $this->path),
             'size' => $this->size,
-            // 'created_at' => $this->created_at->toDateTimeString(),
-            // 'updated_at' => $this->updated_at->toDateTimeString(),
+            // 'file' => $this->file,
+            'created_at' => $this->created_at->toDateTimeString(),
+            'updated_at' => $this->updated_at->toDateTimeString(),
         ];
     }
 }
