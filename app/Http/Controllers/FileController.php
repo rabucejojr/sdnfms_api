@@ -72,7 +72,7 @@ class FileController extends Controller
             if ($size <= 10485760) {
 
                 $file->update([
-                    'name' => $request->input('name', $file), // Retain the original filename
+                    'name' => $original_name, // Retain the original filename
                     'path' => $filePath, // Store the path to access the file
                     'size' => $size, // File size
                     'file' => $unique_name,
