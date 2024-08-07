@@ -6,8 +6,11 @@ use App\Http\Requests\StoreRequest;
 use App\Http\Requests\UpdateRequest;
 use App\Http\Resources\FileResource;
 use App\Models\File;
+use Illuminate\Http\Client\Request;
+use Illuminate\Http\JsonResponse;
+
 use Illuminate\Http\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
@@ -24,7 +27,6 @@ class FileController extends Controller
     // Store a newly created resource in storage.
     public function store(StoreRequest $request)
     {
-        $request->validateResolved();
         if ($request->hasFile('file')) {
             // Store the file
             $file = $request->file('file');
@@ -34,9 +36,10 @@ class FileController extends Controller
             $unique_name = $original_name . '.' . $file_ext;
             $size = $file->getSize();
 
-            // Check if filesize is greater than 10mb (10240 bytes)
-            if ($size <= 10240) {
-
+            // Check if filesize is greater than 10mb (10485760 bytes)
+            if ($size > 10485760 and Storage::exists($filePath)) {
+                return response()->json(['error' => 'File exists/too large...'], 400);
+            } else {
                 $file = File::create([
                     'name' => $original_name, // Retain the original filename
                     'path' => $filePath, // Store the path to access the file
@@ -44,8 +47,6 @@ class FileController extends Controller
                     'file' => $unique_name,
                 ]);
                 return FileResource::make($file);
-            } else {
-                return response()->json(['error' => 'File exceeds the maximum allowed size of 10MB'], 400);
             }
         }
     }
@@ -59,43 +60,45 @@ class FileController extends Controller
     // Update the specified resource in storage.
     public function update(UpdateRequest $request, File $file)
     {
-        $request->validateResolved();
         if ($request->hasFile('file')) {
             // Store the file
-            $file = $request->file('file');
-            $file_ext = $file->getClientOriginalExtension();
-            $original_name = $file->getClientOriginalName();
-            $filePath = $request->file('file')->storeAs('files', $original_name);
-            $unique_name = $original_name . '.' . $file_ext;
+            $uploadedFile = $request->file('file');
+            $file_ext = $uploadedFile->getClientOriginalExtension();
+            $original_name = $uploadedFile->getClientOriginalName();
             $size = $file->getSize();
 
-            if ($size <= 10485760) {
+            $filePath = $uploadedFile->file('file')->storeAs('files', $original_name);
+            $unique_name = $original_name . '.' . $file_ext;
 
+            if ($size <= 10485760) {
+                // Delete the old file if it exists
+                if (Storage::disk('public')->exists($filePath)) {
+                    (Storage::disk('public')->delete($filePath));
+                }
                 $file->update([
-                    'name' => $original_name, // Retain the original filename
-                    'path' => $filePath, // Store the path to access the file
-                    'size' => $size, // File size
+                    'name' => $original_name,
+                    'path' => $filePath,
+                    'size' => $size,
                     'file' => $unique_name,
                 ]);
                 return FileResource::make($file);
-            } else {
-                return response()->json(['error' => 'File exceeds the maximum allowed size of 10MB'], 400);
+                return response()->json(['success' => 'saved'], 400);
             }
-        }
-        if ($request->filled('name')) {
-            $file->update([
-                'name' => $request->input('name'),
-            ]);
-
             return FileResource::make($file);
         }
     }
 
-
     // Remove the specified resource from storage.
-    public function destroy(File $file)
+    public function destroy(Request $request, File $file)
     {
-        $file->delete();
-        return response()->noContent();
+        $filePath = $file->path;
+        if (Storage::exists($filePath)) {
+            Storage::delete($filePath);
+
+            $file->delete();
+            return response()->noContent();
+        } else {
+            return response()->json(['error' => 'File not found'], 404);
+        }
     }
 }

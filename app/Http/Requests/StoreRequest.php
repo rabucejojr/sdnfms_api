@@ -23,7 +23,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'file' => 'required|mimes:jpg,jpeg,png,pdf,xlsx|max:10485760',
+            'file' => 'required|mimes:jpg,jpeg,png,pdf,xlsx,doc,docx|max:10485760',
         ];
     }
 }
