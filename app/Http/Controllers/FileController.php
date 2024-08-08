@@ -62,6 +62,7 @@ class FileController extends Controller
     public function update(UpdateRequest $request, File $file)
     {
 
+        $file->name = $request->validated();
         // Log the request data for debugging
         Log::info('Request data:', $request->all());
         // delete file
@@ -70,17 +71,19 @@ class FileController extends Controller
 
         // Store the new file
         $newFile = $request->file('file');
-        if ($newFile) {
-            $newFileName = $newFile->getClientOriginalName();
-            $newFilePath = $newFile->storeAs('files', $newFileName);
+        return response()->json($newFile);
+        // var_dump($newFile);
+        
+        // if ($newFile) {
+        //     $newFileName = $newFile->getClientOriginalName();
+        //     $newFilePath = $newFile->storeAs('files', $newFileName);
 
-            $file->name = $request->validated();
-            $file->path = $newFilePath;
-            return FileResource::make($file);
-            return response()->json(['success' => 'info updated successfully']);
-        } else {
-            return response()->json(['error' => 'File upload failed'], 400);
-        }
+        //     $file->path = $newFilePath;
+        //     return FileResource::make($file);
+        //     return response()->json(['success' => 'info updated successfully']);
+        // } else {
+        //     return response()->json(['error' => 'File upload failed'], 400);
+        // }
     }
 
     // Remove the specified resource from storage.
