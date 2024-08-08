@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class FileController extends Controller
 {
@@ -60,45 +61,35 @@ class FileController extends Controller
     // Update the specified resource in storage.
     public function update(UpdateRequest $request, File $file)
     {
-        if ($request->hasFile('file')) {
-            // Store the file
-            $uploadedFile = $request->file('file');
-            $file_ext = $uploadedFile->getClientOriginalExtension();
-            $original_name = $uploadedFile->getClientOriginalName();
-            $size = $file->getSize();
 
-            $filePath = $uploadedFile->file('file')->storeAs('files', $original_name);
-            $unique_name = $original_name . '.' . $file_ext;
+        // Log the request data for debugging
+        Log::info('Request data:', $request->all());
+        // delete file
+        $oldFile = $file->name;
+        Storage::disk('public')->delete($oldFile);
 
-            if ($size <= 10485760) {
-                // Delete the old file if it exists
-                if (Storage::disk('public')->exists($filePath)) {
-                    (Storage::disk('public')->delete($filePath));
-                }
-                $file->update([
-                    'name' => $original_name,
-                    'path' => $filePath,
-                    'size' => $size,
-                    'file' => $unique_name,
-                ]);
-                return FileResource::make($file);
-                return response()->json(['success' => 'saved'], 400);
-            }
+        // Store the new file
+        $newFile = $request->file('file');
+        if ($newFile) {
+            $newFileName = $newFile->getClientOriginalName();
+            $newFilePath = $newFile->storeAs('files', $newFileName);
+
+            $file->name = $request->validated();
+            $file->path = $newFilePath;
             return FileResource::make($file);
+            return response()->json(['success' => 'info updated successfully']);
+        } else {
+            return response()->json(['error' => 'File upload failed'], 400);
         }
     }
 
     // Remove the specified resource from storage.
-    public function destroy(Request $request, File $file)
+    public function destroy(File $file)
     {
-        $filePath = $file->path;
-        if (Storage::exists($filePath)) {
-            Storage::delete($filePath);
-
-            $file->delete();
-            return response()->noContent();
-        } else {
-            return response()->json(['error' => 'File not found'], 404);
-        }
+        // Retrieve the file path from the database
+        $filePath = 'files/' . $file->name;
+        // Delete the file from storage
+        Storage::disk('public')->delete($filePath);
+        return response()->json(['success' => 'Deleted successfully']);
     }
 }
