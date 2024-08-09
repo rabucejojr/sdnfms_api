@@ -61,29 +61,18 @@ class FileController extends Controller
     // Update the specified resource in storage.
     public function update(UpdateRequest $request, File $file)
     {
+        $oldFileInfo = [
+            'name' => $file->name,
+            'file' => $file->file
+        ];
+        // Validate and handle the request
+        $validated = $request->validated($oldFileInfo);
+        return response()->json($validated);
 
-        $file->name = $request->validated();
-        // Log the request data for debugging
-        Log::info('Request data:', $request->all());
-        // delete file
-        $oldFile = $file->name;
-        Storage::disk('public')->delete($oldFile);
+        // // Update file's name
+        // $file->name = $validated['name'];
 
-        // Store the new file
-        $newFile = $request->file('file');
-        return response()->json($newFile);
-        // var_dump($newFile);
-        
-        // if ($newFile) {
-        //     $newFileName = $newFile->getClientOriginalName();
-        //     $newFilePath = $newFile->storeAs('files', $newFileName);
-
-        //     $file->path = $newFilePath;
-        //     return FileResource::make($file);
-        //     return response()->json(['success' => 'info updated successfully']);
-        // } else {
-        //     return response()->json(['error' => 'File upload failed'], 400);
-        // }
+        // return response()->json($file);
     }
 
     // Remove the specified resource from storage.

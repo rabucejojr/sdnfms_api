@@ -22,8 +22,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|string',
-            'file' => 'sometimes|mimes:jpg,jpeg,png,pdf,xlsx|max:10485760',
+            'file' => 'required|mimes:jpg,jpeg,png,pdf,xlsx|max:10485760',
         ];
     }
     public function messages()
