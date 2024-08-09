@@ -66,8 +66,7 @@ class FileController extends Controller
             'file' => $file->file
         ];
         // Validate and handle the request
-        $validated = $request->validated($oldFileInfo);
-        return response()->json($validated);
+        return response()->json($oldFileInfo);
 
         // // Update file's name
         // $file->name = $validated['name'];
