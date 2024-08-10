@@ -22,7 +22,8 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => 'required|mimes:jpg,jpeg,png,pdf,xlsx|max:10485760',
+            'name' => 'sometimes|string',
+            'file' => 'sometimes|mimes:jpg,jpeg,png,pdf,xlsx,doc,docx|max:10485760',
         ];
     }
     public function messages()
@@ -33,7 +34,7 @@ class UpdateRequest extends FormRequest
             'name.max' => 'The name may not be greater than 255 characters.',
             'file.required' => 'The file field is required.',
             'file.file' => 'The file must be a valid file.',
-            'file.mimes' => 'The file must be a file of type: jpeg, png, pdf, docx , xlsx',
+            'file.mimes' => 'The file must be a file of type: jpg,jpeg,png,pdf,xlsx,doc,docx',
             'file.max' => 'The file may not be greater than 10MB.',
         ];
     }
