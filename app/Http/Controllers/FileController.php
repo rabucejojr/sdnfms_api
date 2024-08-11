@@ -65,38 +65,8 @@ class FileController extends Controller
         $oldFileContent = $request->getOldFileContent($file);
         $newFile = $request->getNewFile();
 
-        if ($newFile) {
-            $newFileName = $file->name; // Retain the old file's name
-            $newFilePath = 'files/' . $newFileName;
+        return $oldFileContent;
 
-            // Store the new file with the old name
-            Storage::disk('public')->putFileAs('files', $newFile, $newFileName);
-
-            // Read the new file content
-            $newFileContent = Storage::disk('public')->get($newFilePath);
-
-            // Compare the contents of the old and new files
-            if ($newFileContent !== $oldFileContent) {
-                // Delete the old file if it exists
-                if (Storage::disk('public')->exists($file->path)) {
-                    Storage::disk('public')->delete($file->path);
-                }
-
-                // Update the file record with the new file details
-                $file->update([
-                    'file' => $newFilePath
-                ]);
-            } else {
-                // If the file contents are the same, revert the new file upload
-                Storage::disk('public')->delete($newFilePath);
-                return response()->json(['message' => 'The new file is identical to the existing file'], 200);
-            }
-
-            // Return the updated file resource
-            return new FileResource($file);
-        }
-
-        // If no file was uploaded
         return response()->json(['message' => 'No file uploaded'], 400);
     }
 

@@ -38,7 +38,7 @@ class UpdateRequest extends FormRequest
         if (Storage::disk('public')->exists($file->path)) {
             // Get the file's name from the path
             $fileName = basename($file->path);
-            return response()->json(['name' => $fileName], 200);
+            return $fileName;
         }
 
         return response()->json(['message' => 'File not found or path does not exist'], 404);
