@@ -32,6 +32,7 @@ class FileController extends Controller
             // Store the file
             $file = $request->file('file');
             $file_ext = $file->getClientOriginalExtension();
+            $name = $request->name;
             $original_name = $file->getClientOriginalName();
             $filePath = $request->file('file')->storeAs('files', $original_name);
             $unique_name = $original_name . '.' . $file_ext;
@@ -42,7 +43,7 @@ class FileController extends Controller
                 return response()->json(['error' => 'File exists/too large...'], 400);
             } else {
                 $file = File::create([
-                    'name' => $original_name, // Retain the original filename
+                    'name' => $name, // Retain the original filename
                     'path' => $filePath, // Store the path to access the file
                     'size' => $size, // File size
                     'file' => $unique_name,
@@ -61,18 +62,44 @@ class FileController extends Controller
     // Update the specified resource in storage.
     public function update(UpdateRequest $request, File $file)
     {
-        $oldFileInfo = [
-            'name' => $file->name,
-            'file' => $file->file
-        ];
-        // Validate and handle the request
-        return response()->json($oldFileInfo);
+        $oldFileContent = $request->getOldFileContent($file);
+        $newFile = $request->getNewFile();
 
-        // // Update file's name
-        // $file->name = $validated['name'];
+        if ($newFile) {
+            $newFileName = $file->name; // Retain the old file's name
+            $newFilePath = 'files/' . $newFileName;
 
-        // return response()->json($file);
+            // Store the new file with the old name
+            Storage::disk('public')->putFileAs('files', $newFile, $newFileName);
+
+            // Read the new file content
+            $newFileContent = Storage::disk('public')->get($newFilePath);
+
+            // Compare the contents of the old and new files
+            if ($newFileContent !== $oldFileContent) {
+                // Delete the old file if it exists
+                if (Storage::disk('public')->exists($file->path)) {
+                    Storage::disk('public')->delete($file->path);
+                }
+
+                // Update the file record with the new file details
+                $file->update([
+                    'file' => $newFilePath
+                ]);
+            } else {
+                // If the file contents are the same, revert the new file upload
+                Storage::disk('public')->delete($newFilePath);
+                return response()->json(['message' => 'The new file is identical to the existing file'], 200);
+            }
+
+            // Return the updated file resource
+            return new FileResource($file);
+        }
+
+        // If no file was uploaded
+        return response()->json(['message' => 'No file uploaded'], 400);
     }
+
 
     // Remove the specified resource from storage.
     public function destroy(File $file)
