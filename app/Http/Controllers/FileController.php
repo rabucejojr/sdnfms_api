@@ -6,12 +6,7 @@ use App\Http\Requests\StoreRequest;
 use App\Http\Requests\UpdateRequest;
 use App\Http\Resources\FileResource;
 use App\Models\File;
-use Illuminate\Http\Client\Request;
-use Illuminate\Http\JsonResponse;
-
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 
 class FileController extends Controller
 {
@@ -62,12 +57,12 @@ class FileController extends Controller
     // Update the specified resource in storage.
     public function update(UpdateRequest $request, File $file)
     {
-        $oldFileContent = $request->getOldFileContent($file);
-        $newFile = $request->getNewFile();
-
-        return $oldFileContent;
-
-        return response()->json(['message' => 'No file uploaded'], 400);
+        $oldName = $request->getOldFileContent($file);
+        if ($request->has('name')) {
+            $name = $request->getName();
+            return $name;
+        }
+        return response()->json(['error' => 'Missing name input'], 400);
     }
 
 
