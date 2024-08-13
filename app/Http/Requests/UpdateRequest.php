@@ -30,7 +30,7 @@ class UpdateRequest extends FormRequest
     /**
      * Get the old file content from storage for comparison.
      *
-     * @return  File  $file
+    //  * @return  File  $file
      * @return string|null
      */
     public function getNewFileContent()

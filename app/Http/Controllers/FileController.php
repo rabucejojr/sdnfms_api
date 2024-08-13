@@ -64,13 +64,12 @@ class FileController extends Controller
         // return $oldName . " ; " . $oldFile;
 
         //get new file, name
-        $newFileInfo = $request->getNewFileContent();
-        $newFile = $newFileInfo['new_file'];
-        $newName = $newFileInfo['new_name'];
+        $newFile = $request->file('file');
+        $newName = $request->input('name');
         return response()->json([
-            "new file" => $newFile,
-            "new name" => $newName,
-        ]);
+            'new file' => $newFile, 
+            'new name' => $newName
+        ]); 
 
         //get new name for update
         // $newName = $request->getName();
