@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Models\File;
+use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRequest extends StoreRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +23,21 @@ class UpdateRequest extends StoreRequest
     public function rules(): array
     {
         return [
-            'name' => 'nullable|string|max:255',
+            'name' => 'sometimes|string|max:255',
+            'file' => 'sometimes|mimes:jpg,jpeg,png,pdf,xlsx,doc,docx|max:10485760',
         ];
     }
-    // /**
-    //  * Get the old file content from storage for comparison.
+    /**
+     * Get the old file content from storage for comparison.
+     *
+     * @return  File  $file
+     */
+    public function getNewFileContent()
+    {
+            return $this->file('file');
+    }
+
+        //  * Get the old file content from storage for comparison.
     //  *
     //  * @param  File  $file
     //  * @return string|null
@@ -38,6 +49,7 @@ class UpdateRequest extends StoreRequest
 
         return response()->json(['message' => 'File not found or path does not exist'], 404);
     }
+
         /**
      * Get the new file input name.
      *
