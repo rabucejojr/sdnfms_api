@@ -58,9 +58,10 @@ class FileController extends Controller
     public function update(UpdateRequest $request, File $file)
     {
         $oldName = $request->getOldFileContent($file);
+        return $oldName;
         if ($request->has('name')) {
             $name = $request->getName();
-            return $name;
+            return $oldName;
         }
         return response()->json(['error' => 'Missing name input'], 400);
     }
