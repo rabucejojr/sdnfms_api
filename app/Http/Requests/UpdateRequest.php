@@ -34,23 +34,23 @@ class UpdateRequest extends FormRequest
      */
     public function getNewFileContent()
     {
-            return $this->file('file');
+        return $this->file('file');
     }
 
-        //  * Get the old file content from storage for comparison.
-    //  *
-    //  * @param  File  $file
-    //  * @return string|null
-    //  */
+    /* Get the old file content from storage for comparison.
+     *
+     * @param  File  $file
+     * @return string|null
+     */
     public function getOldFileContent(File $file)
     {
-            $fileName = $file->name;
-            return $fileName;
+        $fileName = $file->name;
+        return $fileName;
 
         return response()->json(['message' => 'File not found or path does not exist'], 404);
     }
 
-        /**
+    /**
      * Get the new file input name.
      *
      * @return string
