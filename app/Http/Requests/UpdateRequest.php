@@ -45,8 +45,13 @@ class UpdateRequest extends FormRequest
     public function getOldFileContent(File $file)
     {
         $fileName = $file->name;
-        return $fileName;
-
+        $filePath = $file->path;
+        if (!$fileName || !$filePath) {
+            return response()->json([
+                "old file" => $fileName,
+                "old file" => $filePath,
+            ]);
+        }
         return response()->json(['message' => 'File not found or path does not exist'], 404);
     }
 
