@@ -31,10 +31,16 @@ class UpdateRequest extends FormRequest
      * Get the old file content from storage for comparison.
      *
      * @return  File  $file
+     * @return string|null
      */
     public function getNewFileContent()
     {
-        return $this->file('file');
+        $newFile = $this->file('file');
+        $newName = $this->input('name');
+        return [
+            "new_file" => $newFile,
+            "new_name" => $newName,
+        ];
     }
 
     /* Get the old file content from storage for comparison.
