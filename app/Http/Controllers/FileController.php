@@ -57,28 +57,20 @@ class FileController extends Controller
     // Update the specified resource in storage.
     public function update(UpdateRequest $request, File $file)
     {
-        // // get old file and name
-        // $oldFileResource = FileResource::make($file);
-        // $oldName = $oldFileResource->name;
-        // $oldFile = $oldFileResource->path;
+        // get old file and name
+        $oldFileResource = FileResource::make($file);
+        $oldName = $oldFileResource->name;
+        $oldFile = $oldFileResource->path;
         // return $oldName . " ; " . $oldFile;
 
-        //get new file, name
-        $newFile = $request->file('file');
-        $newName = $request->input('name');
-        return response()->json([
-            'new file' => $newFile, 
-            'new name' => $newName
-        ]); 
-
         //get new name for update
-        // $newName = $request->getName();
-        // $name = FileResource::make($file);
-        // $oldName = $name->name;
-        // $file->name = $newName;
-        // $file->save();
+        $newName = $request->getName();
+        $name = FileResource::make($file);
+        $oldName = $name->name;
+        $file->name = $newName;
+        $file->save();
 
-        // return response()->json(['oldname' => $oldName, 'new name' => $newName]);
+        return response()->json(['oldname' => $oldName, 'new name' => $newName]);
 
         // if (!$request->hasFile('file') || !$request->input('name')) {
         //     return response()->json(['error' => 'Missing required fields'], 400);
