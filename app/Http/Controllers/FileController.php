@@ -57,60 +57,7 @@ class FileController extends Controller
     // Update the specified resource in storage.
     public function update(UpdateRequest $request, File $file)
     {
-        // get old file and name
-        $oldFileResource = FileResource::make($file);
-        $oldName = $oldFileResource->name;
-        $oldFile = $oldFileResource->path;
-        // return $oldName . " ; " . $oldFile;
-
-        //get new name for update
-        $newName = $request->getName();
-        $name = FileResource::make($file);
-        $oldName = $name->name;
-        $file->name = $newName;
-        $file->save();
-
-        return response()->json(['oldname' => $oldName, 'new name' => $newName]);
-
-        // if (!$request->hasFile('file') || !$request->input('name')) {
-        //     return response()->json(['error' => 'Missing required fields'], 400);
-        // }
-
-        // get new input, file and name
-        // $newFile = $request->getNewFileContent();
-        // $newName = $request->getName();
-
-
-        // return $newFile . ";" . $newName;
-        // if ($request->hasFile('file')) {
-        //     return response()->json([
-        //         "new name" => $newName,
-        //         "new file" => $newFile,
-        //         "old name" => $oldName,
-        //         "oldFile" => $oldFile,
-        //     ]);
-        // }
-
-
-        // if ($newFile && $oldFile) {
-        //     // Delete the old file if it exists
-        //     if (Storage::exists($oldFile)) {
-        //         Storage::delete($oldFile);
-        //     }
-
-        //     // Store the new file and get the new file path
-        //     $newFilePath = $newFile->storeAs('files', $newFile);
-
-        //     // Update the file record with the new file path or other details
-        //     $file->name = $newName;
-        //     $file->path = $newFilePath;
-        //     $file->save();
-        // }
-        // Return a response
-        // return response()->json([
-        //     'message' => 'File updated successfully',
-        //     'new_file_path' => $newFilePath ?? $oldFile
-        // ]);
+      
     }
 
 
