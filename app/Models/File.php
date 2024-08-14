@@ -9,5 +9,5 @@ use Laravel\Sanctum\Contracts\HasApiTokens;
 class File extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'path', 'size'];
+    protected $fillable = ['name', 'path', 'file', 'size'];
 }
