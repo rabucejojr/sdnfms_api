@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Resources\FileResource;
 use App\Models\File;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -27,48 +28,16 @@ class UpdateRequest extends StoreRequest
             'file' => 'sometimes|mimes:jpg,jpeg,png,pdf,xlsx,doc,docx|max:10485760',
         ];
     }
-    /**
-     * Get the old file content from storage for comparison.
-     *
-    //  * @return  File  $file
-     * @return string|null
-     */
-    public function getNewFileContent()
-    {
-        $newFile = $this->file('file');
-        $newName = $this->input('name');
-        return [
-            "new_file" => $newFile,
-            "new_name" => $newName,
-        ];
-    }
-
-    /* Get the old file content from storage for comparison.
-     *
-     * @param  File  $file
-     * @return string|null
-     */
-    public function getOldFileContent(File $file)
-    {
-        $fileName = $file->name;
-        $filePath = $file->path;
-        if (!$fileName || !$filePath) {
-            return response()->json([
-                "old file" => $fileName,
-                "old file" => $filePath,
-            ]);
-        }
-        return response()->json(['message' => 'File not found or path does not exist'], 404);
-    }
 
     /**
      * Get the new file input name.
      *
-     * @return string
+     * @return int
      */
-    public function getName()
+    public function getId(File $file)
     {
-        // Return the 'name' input from the request
-        return $this->input('name');
+        $file = FileResource::make($file);
+        $fileId = $file->id;
+        return $fileId;
     }
 }
