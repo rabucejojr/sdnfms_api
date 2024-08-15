@@ -57,12 +57,23 @@ class FileController extends Controller
     // Update the specified resource in storage.
     public function update(UpdateRequest $request, File $file)
     {
-      $fileID = $request->getId($file);
+        $fileUpload=$request->getFile();
+        // var_dump($fileUpload);   //returns NULL
+        $file = $request->file('file');
+        var_dump($file);
+        // // Delete the file from storage
+        // Storage::disk('public')->delete($file->path);
 
-      // get id with the endpoint
-      $fileUpdate = File::findOrFail($fileID);
-      return $fileUpdate->file;
 
+        // //new name
+        // $newName = $request->name;
+        // $file->name = $newName;
+        // $file->save();
+        // return response()->json([
+        //     "old name" => $oldName,
+        //     "new name" => $newName,
+        //     "old filepath" => $oldPath,
+        // ]);
     }
 
 
@@ -70,7 +81,7 @@ class FileController extends Controller
     public function destroy(File $file)
     {
         // Retrieve the file path from the database
-        $filePath = 'files/' . $file->name;
+        $filePath = $file->path;
         // Delete the file from storage
         Storage::disk('public')->delete($filePath);
         return response()->json(['success' => 'Deleted successfully']);

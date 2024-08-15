@@ -6,7 +6,7 @@ use App\Http\Resources\FileResource;
 use App\Models\File;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRequest extends StoreRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -39,5 +39,14 @@ class UpdateRequest extends StoreRequest
         $file = FileResource::make($file);
         $fileId = $file->id;
         return $fileId;
+    }
+    /**
+     * Get the new file from the request.
+     *
+     * @return \Illuminate\Http\UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file('file');
     }
 }
