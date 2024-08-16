@@ -43,10 +43,14 @@ class UpdateRequest extends FormRequest
     /**
      * Get the new file from the request.
      *
-     * @return \Illuminate\Http\UploadedFile
+     * @return \Illuminate\Http\UploadedFile|null
      */
     public function getFile()
     {
-        return $this->hasFile('file');
+        if ($this->hasFile('file')) {
+            return $this->file('file');
+        }
+
+        return null;
     }
 }
