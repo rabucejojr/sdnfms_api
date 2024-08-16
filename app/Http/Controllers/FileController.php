@@ -41,7 +41,7 @@ class FileController extends Controller
                     'name' => $name, // Retain the original filename
                     'path' => $filePath, // Store the path to access the file
                     'size' => $size, // File size
-                    'file' => $unique_name,
+                    'file' => $original_name,
                 ]);
                 return FileResource::make($file);
             }
@@ -57,13 +57,6 @@ class FileController extends Controller
     // Update the specified resource in storage.
     public function update(UpdateRequest $request, File $file)
     {
-        $fileUpload=$request->getFile();
-        // var_dump($fileUpload);   //returns NULL
-        $file = $request->file('file');
-        var_dump($file);
-        // // Delete the file from storage
-        // Storage::disk('public')->delete($file->path);
-
 
         // //new name
         // $newName = $request->name;

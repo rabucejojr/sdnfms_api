@@ -47,6 +47,6 @@ class UpdateRequest extends FormRequest
      */
     public function getFile()
     {
-        return $this->file('file');
+        return $this->hasFile('file');
     }
 }
