@@ -58,8 +58,8 @@ class FileController extends Controller
     public function update(UpdateRequest $request, File $file)
     {
 
-        $newFile = $request->getFile();
-        var_dump($newFile);
+        $id = $request->getId($file);
+        var_dump($id);
 
         // //new name
         // $newName = $request->name;

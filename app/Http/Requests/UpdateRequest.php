@@ -40,17 +40,4 @@ class UpdateRequest extends FormRequest
         $fileId = $file->id;
         return $fileId;
     }
-    /**
-     * Get the new file from the request.
-     *
-     * @return \Illuminate\Http\UploadedFile|null
-     */
-    public function getFile()
-    {
-        if ($this->hasFile('file')) {
-            return $this->file('file');
-        }
-
-        return null;
-    }
 }
