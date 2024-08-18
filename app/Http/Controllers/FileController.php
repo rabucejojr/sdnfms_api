@@ -56,20 +56,10 @@ class FileController extends Controller
 
     // Update the specified resource in storage.
     public function update(UpdateRequest $request, File $file)
-    {
-
-        $id = $request->getId($file);
-        var_dump($id);
-
-        // //new name
-        // $newName = $request->name;
-        // $file->name = $newName;
-        // $file->save();
-        // return response()->json([
-        //     "old name" => $oldName,
-        //     "new name" => $newName,
-        //     "old filepath" => $oldPath,
-        // ]);
+    {     
+        $newFile = $request->getFile();      
+        $name = $request->getName();
+        
     }
 
 

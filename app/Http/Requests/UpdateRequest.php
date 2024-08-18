@@ -28,16 +28,24 @@ class UpdateRequest extends FormRequest
             'file' => 'sometimes|mimes:jpg,jpeg,png,pdf,xlsx,doc,docx|max:10485760',
         ];
     }
+    
+    /**
+     * Get the file input from the request.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->input('name');
+    }
 
     /**
-     * Get the new file input name.
+     * Get the file input from the request.
      *
-     * @return int
+     * @return \Illuminate\Http\UploadedFile|null
      */
-    public function getId(File $file)
+    public function getFile()
     {
-        $file = FileResource::make($file);
-        $fileId = $file->id;
-        return $fileId;
+        return $this->file('file');
     }
 }
