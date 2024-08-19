@@ -57,12 +57,38 @@ class FileController extends Controller
     // Update the specified resource in storage.
     public function update(UpdateRequest $request, File $file)
     {
-        // $newFile = $request->getFile();      
-        // $name = $request->getName();
-        $name = $request->input('name');  // for text input
-        $file = $request->file('file');    // for file input
+        // Get new file
+        $newFile = $request->file('file');
+        $new_file_ext = $newFile->getClientOriginalExtension();
+        $new_name = $request->name;
 
-        var_dump($request->all());
+        // Get the original file path before update
+        $originalFilePath = $file->path;
+
+        // Delete the old file from storage if it exists
+        if (Storage::exists($originalFilePath)) {
+            Storage::delete($originalFilePath);
+        }
+
+        // Store the new file and update file details
+        $original_name = $newFile->getClientOriginalName();
+        $new_filepath = $newFile->storeAs('files', $original_name);
+
+        $size = $newFile->getSize();
+
+        // Validate file size
+        if ($size > 10485760) {
+            return response()->json(['error' => 'File too large...'], 400);
+        }
+        
+        // Update file details in the database
+        $file->name = $new_name;
+        $file->path = $new_filepath;
+        $file->size = $size;
+
+        $file->save();
+
+        return FileResource::make($file);
     }
 
 
