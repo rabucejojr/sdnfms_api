@@ -80,7 +80,7 @@ class FileController extends Controller
         if ($size > 10485760) {
             return response()->json(['error' => 'File too large...'], 400);
         }
-        
+
         // Update file details in the database
         $file->name = $new_name;
         $file->path = $new_filepath;
@@ -98,7 +98,12 @@ class FileController extends Controller
         // Retrieve the file path from the database
         $filePath = $file->path;
         // Delete the file from storage
-        Storage::disk('public')->delete($filePath);
+        if (Storage::disk('public')->exists($filePath)) {
+            Storage::disk('public')->delete($filePath);
+        }
+
+        // Delete the file record from the database
+        $file->delete();
         return response()->json(['success' => 'Deleted successfully']);
     }
 }
