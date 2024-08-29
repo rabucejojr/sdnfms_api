@@ -59,7 +59,6 @@ class FileController extends Controller
     {
         // Get new file
         $newFile = $request->file('file');
-        $new_file_ext = $newFile->getClientOriginalExtension();
         $new_name = $request->name;
 
         // Get the original file path before update
